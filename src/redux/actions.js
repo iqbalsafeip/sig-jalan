@@ -33,26 +33,29 @@ export const isLogin = () => (dispatch) => {
 
 export const login = (data) => (dispatch) => {
   dispatch({ type: "SET_LOADING", payload: true });
-
-  axios({
-    method: "POST",
-    url: BASE_URL + "auth/local",
-    data: data,
-  })
-    .then(function (response) {
-      console.log(response);
-      dispatch({ type: "SET_ROLE", payload: response?.data?.user.peran });
-      dispatch({ type: "SET_LOGIN", payload: true });
-      dispatch({ type: "SET_LOADING", payload: false });
-      dispatch({ type: "SET_USER", payload: response.data.user });
-      const { jwt: token } = response.data;
-      dispatch({ type: "SET_TOKEN", payload: token });
-      storeItem(token);
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "POST",
+      url: BASE_URL + "auth/local",
+      data: data,
     })
-    .catch(function (response) {
-      console.log(response.response);
-      dispatch({ type: "SET_LOADING", payload: false });
-    });
+      .then(function (response) {
+        console.log(response);
+        dispatch({ type: "SET_ROLE", payload: response?.data?.user.peran });
+        dispatch({ type: "SET_LOGIN", payload: true });
+        dispatch({ type: "SET_LOADING", payload: false });
+        dispatch({ type: "SET_USER", payload: response.data.user });
+        const { jwt: token } = response.data;
+        dispatch({ type: "SET_TOKEN", payload: token });
+        storeItem(token);
+        resolve();
+      })
+      .catch(function (response) {
+        console.log(response.response);
+        reject();
+        dispatch({ type: "SET_LOADING", payload: false });
+      });
+  });
 };
 
 export const logout = () => (dispatch) => {

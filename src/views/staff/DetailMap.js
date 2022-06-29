@@ -23,6 +23,7 @@ import {
   CInput,
   CSelect,
   CSpinner,
+  CTextarea,
 } from "@coreui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -36,6 +37,7 @@ import RoutingMachine from "../widgets/RoutingMachine";
 
 const Details = (props) => {
   const { id } = useParams();
+  const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
   const [data, setData] = useState({
     nip: "",
@@ -73,6 +75,7 @@ const Details = (props) => {
   }, []);
   return (
     <CRow>
+      <Modal modalShown={modal} toggle={() => setModal(!modal)} />
       <CCol xs="12" md="6" lg="4">
         <CCard>
           <CCardHeader>Details Jalan</CCardHeader>
@@ -145,7 +148,7 @@ const Details = (props) => {
             <div className="card-header-actions">
               <Link
                 className="btn btn-primary btn-sm"
-                to={`data-pegawai/update/${id}`}
+                to={`jalan/update/${id}`}
               >
                 Update
               </Link>
@@ -163,6 +166,9 @@ const Details = (props) => {
                 <CNavItem>
                   <CNavLink>Komentar Warga</CNavLink>
                 </CNavItem>
+                <CNavItem>
+                  <CNavLink>Gambar Jalan</CNavLink>
+                </CNavItem>
               </CNav>
               <CTabContent>
                 <CTabPane>
@@ -172,6 +178,7 @@ const Details = (props) => {
                       zoom={13}
                       scrollWheelZoom={false}
                       style={{ maxHeight: 600 }}
+                      dragging={false}
                     >
                       <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -197,13 +204,79 @@ const Details = (props) => {
                     </MapContainer>
                   )}
                 </CTabPane>
-                <CTabPane></CTabPane>
+                <CTabPane>
+                  <div
+                    style={{
+                      height: "60vh",
+                      minWidth: "100%",
+                      overflow: "scroll",
+                    }}
+                    className="p-2"
+                  >
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={() => setModal(!modal)}
+                      style={{ position: "absolute", bottom: 2, right: 2 }}
+                    >
+                      Tambah Komentar
+                    </button>
+                    <div class="card mb-2">
+                      <div class="card-body">
+                        <p>Type your note, and hit enter to add it</p>
+
+                        <div class="d-flex justify-content-between">
+                          <div class="d-flex flex-row align-items-center">
+                            <p class="small mb-0 ms-2">Martha</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CTabPane>
+                <CTabPane>
+                  <p>Gambar belum tersedia</p>
+                </CTabPane>
               </CTabContent>
             </CTabs>
           </CCardBody>
         </CCard>
       </CCol>
     </CRow>
+  );
+};
+
+const Modal = (props) => {
+  const [Komentar, setKomentar] = React.useState("");
+  const cb = () => {
+    setKomentar("");
+  };
+
+  return (
+    <CModal show={props.modalShown} onClose={props.toggle}>
+      <CModalHeader closeButton>Tambah Komentar</CModalHeader>
+      <CModalBody>
+        <p>*Gunakan komentar dengan bijak</p>
+        <CFormGroup>
+          <CLabel htmlFor="nf-nama">Komentar</CLabel>
+          <CTextarea
+            rows={5}
+            required
+            onChange={(e) => setKomentar(e.target.value)}
+            value={Komentar}
+          ></CTextarea>
+        </CFormGroup>
+      </CModalBody>
+      <CModalFooter>
+        <CButton color="primary" disabled={props.disabled}>
+          {" "}
+          {props.disabled ? <CSpinner size="sm" /> : null}{" "}
+          {props.isUpdate ? "Update" : "Tambah"}
+        </CButton>{" "}
+        <CButton color="secondary" onClick={props.toggle}>
+          Cancel
+        </CButton>
+      </CModalFooter>
+    </CModal>
   );
 };
 

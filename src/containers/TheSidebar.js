@@ -15,7 +15,7 @@ import {
 import CIcon from "@coreui/icons-react";
 
 // sidebar nav config
-import navigation, { customerNav, staffNav } from "./_nav";
+import navigation, { customerNav, pegawaiNav, staffNav } from "./_nav";
 
 const TheSidebar = () => {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const TheSidebar = () => {
       case "Warga":
         return setNav(customerNav);
       case "Pegawai":
-        return setNav(customerNav);
+        return setNav(pegawaiNav);
       case "Admin":
         return setNav(staffNav);
       case "Chief":

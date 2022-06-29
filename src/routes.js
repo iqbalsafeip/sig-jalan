@@ -329,6 +329,31 @@ export const customerRoutes = [
     name: "PetaPermasalahan",
     component: PetaPermasalahan,
   },
+  {
+    path: "/jalan",
+    exact: true,
+    name: "dataJalan",
+    component: jalan,
+  },
+  {
+    path: "/pertanyaan/add",
+    exact: true,
+    name: "CustomerDataAdd",
+    component: tambahPertanyaan,
+  },
+  {
+    path: "/kecamatan",
+    exact: true,
+    name: "kecamatan",
+    component: kecamatan,
+  },
+
+  {
+    path: "/jalan/:id",
+    exact: true,
+    name: "jln",
+    component: detailMap,
+  },
 ];
 export const technicianRoutes = [
   {
@@ -341,6 +366,31 @@ export const technicianRoutes = [
     exact: true,
     name: "Dashboard",
     component: techniciansDashboard,
+  },
+  {
+    path: "/jalan",
+    exact: true,
+    name: "dataJalan",
+    component: jalan,
+  },
+  {
+    path: "/pertanyaan/add",
+    exact: true,
+    name: "CustomerDataAdd",
+    component: tambahPertanyaan,
+  },
+  {
+    path: "/kecamatan",
+    exact: true,
+    name: "kecamatan",
+    component: kecamatan,
+  },
+
+  {
+    path: "/jalan/:id",
+    exact: true,
+    name: "jln",
+    component: detailMap,
   },
 ];
 export const chiefRoutes = [

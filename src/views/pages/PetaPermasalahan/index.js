@@ -18,6 +18,8 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { getAll, deleteData as _deleteData } from "src/redux/globalActions";
 
+import {} from "@react-leaflet/core";
+
 const fields = [
   "no",
   "username",

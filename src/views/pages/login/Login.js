@@ -31,7 +31,9 @@ const Login = () => {
 
   const submit = (e) => {
     e.preventDefault();
-    dispatch(login({ identifier: username, password: password }));
+    dispatch(login({ identifier: username, password: password })).catch(() => {
+      alert("Username/ Password yang dimasukan salah");
+    });
   };
 
   return (

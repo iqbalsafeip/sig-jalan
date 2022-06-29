@@ -138,11 +138,6 @@ export const staffNav = [
         name: "Data Jalan",
         to: "/jalan",
       },
-      {
-        _tag: "CSidebarNavItem",
-        name: "Report Data Jalan",
-        to: "/surat-masuk",
-      },
     ],
   },
   {
@@ -198,31 +193,34 @@ export const customerNav = [
     icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />,
   },
   {
+    _tag: "CSidebarNavItem",
+    name: "Lihat Data Jalan",
+    icon: "cil-people",
+    route: "/jalan",
+    to: "/jalan",
+  },
+];
+
+export const pegawaiNav = [
+  {
+    _tag: "CSidebarNavItem",
+    name: "Dashboard",
+    to: "/dashboard",
+    icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />,
+  },
+  {
     _tag: "CSidebarNavDropdown",
-    name: "Pelayanan",
-    route: "/agenda-surat",
+    name: "Data Utama",
     icon: (
       <CIcon name="cil-envelope-closed" customClasses="c-sidebar-nav-icon" />
     ),
     _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "Laporkan Masalah",
-        to: "/laporan/buat",
-      },
-      {
-        _tag: "CSidebarNavItem",
-        name: "Laporan Saya",
-        to: "/surat-masuk",
+        name: "Data Jalan",
+        to: "/jalan",
       },
     ],
-  },
-  {
-    _tag: "CSidebarNavItem",
-    name: "Lihat Peta Permasalahan",
-    icon: "cil-people",
-    route: "/peta-permasalahan",
-    to: "/peta-permasalahan",
   },
 ];
 

@@ -30,7 +30,7 @@ const DataJalan = (props) => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [details, setDetails] = React.useState([]);
-
+  const role = useSelector((state) => state.auth.roles);
   const dataPegawai = useSelector((state) => state.dataPegawai);
 
   const toggleDetails = (index) => {
@@ -86,9 +86,19 @@ const DataJalan = (props) => {
             <CCardHeader>
               Data Jalan
               <div className="card-header-actions">
-                <Link className="btn btn-primary" to="data-pegawai/tambah">
-                  Tambah Data
-                </Link>
+                {role !== "Warga" && (
+                  <React.Fragment>
+                    <Link
+                      className="btn btn-success mr-2"
+                      to="data-pegawai/tambah"
+                    >
+                      Import Data
+                    </Link>
+                    <Link className="btn btn-primary" to="data-pegawai/tambah">
+                      Tambah Data
+                    </Link>
+                  </React.Fragment>
+                )}
               </div>
             </CCardHeader>
             <CCardBody>

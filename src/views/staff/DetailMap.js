@@ -27,32 +27,33 @@ import {
 } from "@coreui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router";
+import { useParams, useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { createUser, updateData } from "src/redux/actions";
+import {
+  createKomen,
+  createUser,
+  deleteJalan,
+  getJalanById,
+  getKomentar,
+  updateData,
+} from "src/redux/actions";
 import { createData, getAll } from "src/redux/globalActions";
 import { getPegawaiById, getUserByPegawai } from "src/redux/dataPegawaiActions";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import RoutingMachine from "../widgets/RoutingMachine";
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const Details = (props) => {
+  const history = useHistory();
   const { id } = useParams();
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
-  const [data, setData] = useState({
-    nip: "",
-    nama: "",
-    jenis_kelamin: "",
-    tempat_lahir: "",
-    tgl_lahir: "",
-    no_telp: "",
-    email: "",
-    alamat: "",
-    ttd_file: "",
-    photo_file: "",
-  });
-  const [user, setUser] = useState({});
-  const [jabatan, setJabatan] = useState({});
+  const [data, setData] = useState({});
+  const [isLoadingKomen, setLoadKomen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+  const [komentar, setKomentar] = useState([]);
+
   const [isLoaded, setLoaded] = useState(false);
   const [titik, setTitik] = useState({
     longitude: 0,
@@ -70,12 +71,85 @@ const Details = (props) => {
     console.log(latitude, longitude);
     setLoaded(true);
   }
+
+  const handleComment = (komen, cb) => {
+    setLoadKomen(true);
+    dispatch(createKomen({ data: { konten: komen, user: user.id, jalan: id } }))
+      .then((res) => {
+        console.log(res);
+        setLoadKomen(false);
+        setModal(false);
+        cb();
+        initKomentar();
+        Swal.fire({
+          title: "Berhasil",
+          text: "berhasil mengirim komentar",
+          icon: "success",
+          confirmButtonText: "Tutup",
+        });
+      })
+      .catch((err) => {
+        setLoadKomen(false);
+        console.log(err);
+      });
+  };
+
+  const initKomentar = () => {
+    dispatch(getKomentar(id))
+      .then((res) => {
+        setKomentar(res.data.data);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
+    initKomentar();
+    console.log(user);
+    dispatch(getJalanById(id)).then((res) => {
+      console.log(res.data.data);
+      setData((state) => ({
+        ...res.data.data.attributes,
+        id: res.data.data.id,
+      }));
+    });
     navigator.geolocation.getCurrentPosition(onSuccess);
   }, []);
+
+  const handleDelete = () => {
+    Swal.fire({
+      title: "Apakah Anda Yakin ?",
+      text: "Jika dihapus maka data tidak dapat dikembalikan",
+      icon: "warning",
+      confirmButtonText: "Yakin!",
+      cancelButtonText: "Tutup",
+      showCancelButton: true,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        dispatch(deleteJalan(id)).then(() => {
+          Swal.fire({
+            title: "Berhasil",
+            text: "berhasil menghapus data",
+            icon: "success",
+            confirmButtonText: "Tutup",
+          }).then(() => {
+            history.push("/jalan");
+          });
+        });
+      }
+    });
+  };
+
   return (
     <CRow>
-      <Modal modalShown={modal} toggle={() => setModal(!modal)} />
+      <Modal
+        modalShown={modal}
+        toggle={() => setModal(!modal)}
+        handleComment={handleComment}
+        disabled={isLoadingKomen}
+      />
       <CCol xs="12" md="6" lg="4">
         <CCard>
           <CCardHeader>Details Jalan</CCardHeader>
@@ -84,58 +158,58 @@ const Details = (props) => {
               <tbody>
                 <tr>
                   <td>Nama Jalan</td>
-                  <td>Limbangan - Selaawi (Bts.Kab.Sumedang)</td>
+                  <td>{data.nama_jalan}</td>
                 </tr>
 
                 <tr>
                   <td>Panjang</td>
-                  <td>13.30</td>
+                  <td>{data.panjang}</td>
                 </tr>
                 <tr>
                   <td>Lebar</td>
-                  <td>5.50</td>
+                  <td>{data.lebar}</td>
                 </tr>
                 <tr>
                   <td colSpan={2}>Tipe Permukaan</td>
                 </tr>
                 <tr>
                   <td>ASPAL(AC, HRS, ATB)</td>
-                  <td>11.06 KM</td>
+                  <td>{data.aspal} KM</td>
                 </tr>
                 <tr>
                   <td>PERKAKAS BETON</td>
-                  <td>2.15 KM</td>
+                  <td>{data.perkakas_beton} KM</td>
                 </tr>
                 <tr>
                   <td>LAPIS PENETRASI/LATASIR/MACADA</td>
-                  <td>-</td>
+                  <td>{data.lapis_penetrasi}</td>
                 </tr>
                 <tr>
                   <td>TELFORD /KERIKIL /URPIL</td>
-                  <td>-</td>
+                  <td>{data.telford}</td>
                 </tr>
                 <tr>
                   <td>TANAH /BELUM TEMBUS</td>
-                  <td>-</td>
+                  <td>{data.tanah}</td>
                 </tr>
                 <tr>
                   <td colSpan={2}>Kondisi Jalan</td>
                 </tr>
                 <tr>
                   <td>Baik</td>
-                  <td>9.02</td>
+                  <td>{data.baik}</td>
                 </tr>
                 <tr>
                   <td>Sedang</td>
-                  <td>4.18</td>
+                  <td>{data.sedang}</td>
                 </tr>
                 <tr>
                   <td>Rusak Ringan</td>
-                  <td>-</td>
+                  <td>{data.rusak}</td>
                 </tr>
                 <tr>
                   <td>Rusak Berat</td>
-                  <td>-</td>
+                  <td>{data.rusak_berat}</td>
                 </tr>
               </tbody>
             </table>
@@ -152,7 +226,12 @@ const Details = (props) => {
               >
                 Update
               </Link>
-              <CButton size="sm" color="danger" className="ml-1">
+              <CButton
+                size="sm"
+                color="danger"
+                className="ml-1"
+                onClick={handleDelete}
+              >
                 Delete
               </CButton>
             </div>
@@ -220,17 +299,21 @@ const Details = (props) => {
                     >
                       Tambah Komentar
                     </button>
-                    <div class="card mb-2">
-                      <div class="card-body">
-                        <p>Type your note, and hit enter to add it</p>
+                    {komentar.map((e, i) => (
+                      <div class="card mb-2">
+                        <div class="card-body">
+                          <p>{e.attributes.konten}</p>
 
-                        <div class="d-flex justify-content-between">
-                          <div class="d-flex flex-row align-items-center">
-                            <p class="small mb-0 ms-2">Martha</p>
+                          <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-row align-items-center">
+                              <p class="small mb-0 ms-2">
+                                {e.attributes.user.data.attributes.nama}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </CTabPane>
                 <CTabPane>
@@ -246,7 +329,7 @@ const Details = (props) => {
 };
 
 const Modal = (props) => {
-  const [Komentar, setKomentar] = React.useState("");
+  const [komentar, setKomentar] = React.useState("");
   const cb = () => {
     setKomentar("");
   };
@@ -262,15 +345,18 @@ const Modal = (props) => {
             rows={5}
             required
             onChange={(e) => setKomentar(e.target.value)}
-            value={Komentar}
+            value={komentar}
           ></CTextarea>
         </CFormGroup>
       </CModalBody>
       <CModalFooter>
-        <CButton color="primary" disabled={props.disabled}>
+        <CButton
+          color="primary"
+          disabled={props.disabled}
+          onClick={() => props.handleComment(komentar, cb)}
+        >
           {" "}
-          {props.disabled ? <CSpinner size="sm" /> : null}{" "}
-          {props.isUpdate ? "Update" : "Tambah"}
+          {props.disabled ? <CSpinner size="sm" /> : null} Kirim
         </CButton>{" "}
         <CButton color="secondary" onClick={props.toggle}>
           Cancel

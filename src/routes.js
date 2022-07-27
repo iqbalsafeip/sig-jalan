@@ -73,6 +73,9 @@ const chiefData = React.lazy(() => import("./views/staff/chiefData"));
 const tambahDataChief = React.lazy(() =>
   import("./views/staff/tambahDataChief")
 );
+const tambahDataJalan = React.lazy(() =>
+  import("./views/staff/tambahDataJalan")
+);
 const jalan = React.lazy(() => import("./views/staff/dataJalan"));
 const tambahPertanyaan = React.lazy(() =>
   import("./views/staff/tambahPertanyaan")
@@ -159,6 +162,12 @@ export const staffRoutes = [
     component: kecamatan,
   },
 
+  {
+    path: "/jalan/tambah",
+    exact: true,
+    name: "createjln",
+    component: tambahDataJalan,
+  },
   {
     path: "/jalan/:id",
     exact: true,

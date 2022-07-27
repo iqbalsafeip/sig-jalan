@@ -83,6 +83,40 @@ export const createUser = (data) => (dispatch) => {
       });
   });
 };
+export const createJalan = (data) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(BASE_URL + "jalans", data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then(function (response) {
+        resolve(response);
+      })
+      .catch(function (response) {
+        reject(response);
+      });
+  });
+};
+export const createKomen = (data) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(BASE_URL + "komentars", data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then(function (response) {
+        resolve(response);
+      })
+      .catch(function (response) {
+        reject(response);
+      });
+  });
+};
 
 export const updateData = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {
@@ -121,6 +155,24 @@ export const getUser = (peran) => (dispatch) => {
       });
   });
 };
+export const getKomentar = (id) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "GET",
+      url: BASE_URL + "komentars?filters[jalan][id][$eq]=" + id + "&populate=*",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then(function (response) {
+        resolve(response);
+      })
+      .catch(function (response) {
+        reject(response);
+      });
+  });
+};
 export const getJalan = (peran) => (dispatch) => {
   return new Promise((resolve, reject) => {
     axios({
@@ -139,7 +191,46 @@ export const getJalan = (peran) => (dispatch) => {
       });
   });
 };
-export const getKecamatan = (peran) => (dispatch) => {
+
+export const getJalanById = (id) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "GET",
+      url: BASE_URL + "jalans/" + id + "?populate=*",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then(function (response) {
+        resolve(response);
+      })
+      .catch(function (response) {
+        reject(response);
+      });
+  });
+};
+
+export const deleteJalan = (id) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "DELETE",
+      url: BASE_URL + "jalans/" + id,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then(function (response) {
+        resolve(response);
+      })
+      .catch(function (response) {
+        reject(response);
+      });
+  });
+};
+
+export const getKecamatan = () => (dispatch) => {
   return new Promise((resolve, reject) => {
     axios({
       method: "GET",

@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteDataPegawai, getAllPegawai } from "src/redux/dataPegawaiActions";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { getJalan } from "src/redux/actions";
+import { deleteJalan, getJalan } from "src/redux/actions";
 
 const fields = [
   "no",
@@ -54,7 +54,8 @@ const DataJalan = (props) => {
       showCancelButton: true,
     }).then((res) => {
       if (res.isConfirmed) {
-        dispatch(deleteDataPegawai(id)).then(() => {
+        dispatch(deleteJalan(id)).then(() => {
+          initData();
           Swal.fire({
             title: "Berhasil",
             text: "berhasil menghapus data",
@@ -66,7 +67,7 @@ const DataJalan = (props) => {
     });
   };
 
-  React.useEffect(() => {
+  const initData = () => {
     dispatch(getJalan())
       .then((res) => {
         let temp = res.data.data.map((e) => ({ id: e.id, ...e.attributes }));
@@ -76,6 +77,10 @@ const DataJalan = (props) => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  React.useEffect(() => {
+    initData();
   }, []);
 
   return (
@@ -94,7 +99,7 @@ const DataJalan = (props) => {
                     >
                       Import Data
                     </Link>
-                    <Link className="btn btn-primary" to="data-pegawai/tambah">
+                    <Link className="btn btn-primary" to="/jalan/tambah">
                       Tambah Data
                     </Link>
                   </React.Fragment>

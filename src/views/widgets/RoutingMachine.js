@@ -13,8 +13,8 @@ const createRoutineMachineLayer = ({ waypoints }) => {
     },
     show: false,
     addWaypoints: false,
-    routeWhileDragging: true,
-    draggableWaypoints: true,
+    routeWhileDragging: false,
+    draggableWaypoints: false,
     fitSelectedRoutes: true,
     showAlternatives: false,
   });

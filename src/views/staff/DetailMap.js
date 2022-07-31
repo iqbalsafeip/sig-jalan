@@ -36,6 +36,7 @@ import {
   getJalanById,
   getKomentar,
   updateData,
+  upload,
 } from "src/redux/actions";
 import { createData, getAll } from "src/redux/globalActions";
 import { getPegawaiById, getUserByPegawai } from "src/redux/dataPegawaiActions";
@@ -53,6 +54,26 @@ const Details = (props) => {
   const [isLoadingKomen, setLoadKomen] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const [komentar, setKomentar] = useState([]);
+
+  const [file, setFile] = useState(null);
+
+  const handleUpload = () => {
+    console.log(file);
+    const fd = new FormData();
+    fd.append("files", file[0]);
+    fd.append("ref", "api::jalan.jalan");
+    fd.append("refId", id);
+    fd.append("field", "gambar_jalan");
+    dispatch(upload(fd))
+      .then((res) => {
+        initData();
+        setFile(null);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const [isLoaded, setLoaded] = useState(false);
   const [titik, setTitik] = useState({
@@ -107,16 +128,18 @@ const Details = (props) => {
 
   useEffect(() => {
     initKomentar();
-    console.log(user);
+    initData();
+    navigator.geolocation.getCurrentPosition(onSuccess);
+  }, []);
+
+  const initData = () => {
     dispatch(getJalanById(id)).then((res) => {
-      console.log(res.data.data);
       setData((state) => ({
         ...res.data.data.attributes,
         id: res.data.data.id,
       }));
     });
-    navigator.geolocation.getCurrentPosition(onSuccess);
-  }, []);
+  };
 
   const handleDelete = () => {
     Swal.fire({
@@ -219,22 +242,24 @@ const Details = (props) => {
       <CCol xs="12" md="6" lg="8">
         <CCard>
           <CCardHeader>
-            <div className="card-header-actions">
-              <Link
-                className="btn btn-primary btn-sm"
-                to={`jalan/update/${id}`}
-              >
-                Update
-              </Link>
-              <CButton
-                size="sm"
-                color="danger"
-                className="ml-1"
-                onClick={handleDelete}
-              >
-                Delete
-              </CButton>
-            </div>
+            {["Admin", "Pegawai"].includes(user.peran) ? (
+              <div className="card-header-actions">
+                <Link
+                  className="btn btn-primary btn-sm"
+                  to={`jalan/update/${id}`}
+                >
+                  Update
+                </Link>
+                <CButton
+                  size="sm"
+                  color="danger"
+                  className="ml-1"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </CButton>
+              </div>
+            ) : null}
           </CCardHeader>
           <CCardBody>
             <CTabs>
@@ -317,7 +342,24 @@ const Details = (props) => {
                   </div>
                 </CTabPane>
                 <CTabPane>
-                  <p>Gambar belum tersedia</p>
+                  <div className="card card-body p-2 mt-2">
+                    <label htmlFor="">Tambah Data Gambar</label>
+                    <input
+                      type="file"
+                      onChange={(e) => setFile(e.target.files)}
+                    />
+                    <button className="btn btn-primary" onClick={handleUpload}>
+                      upload
+                    </button>
+                  </div>
+
+                  {data?.gambar_jalan?.data?.map((e, i) => (
+                    <img
+                      src={"http://localhost:1337" + e.attributes.url}
+                      class="d-block w-100"
+                      alt="..."
+                    />
+                  ))}
                 </CTabPane>
               </CTabContent>
             </CTabs>

@@ -83,6 +83,27 @@ export const createUser = (data) => (dispatch) => {
       });
   });
 };
+
+export const upload = (data) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "POST",
+      url: BASE_URL + "upload",
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `bearier ${getItem("token")}`,
+      },
+      data,
+    })
+      .then(function (response) {
+        resolve(response);
+      })
+      .catch(function (response) {
+        reject(response);
+      });
+  });
+};
+
 export const createJalan = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {
     axios

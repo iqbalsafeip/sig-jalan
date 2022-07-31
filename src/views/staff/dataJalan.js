@@ -145,32 +145,40 @@ const DataJalan = (props) => {
                       <>
                         <CCollapse show={details.includes(index)}>
                           <CCardBody>
-                            <p className="text-muted">
-                              Tanggal Buat: {item.createdAt}
-                            </p>
-                            <p className="text-muted">
-                              Tanggal Update: {item.updatedAt}
-                            </p>
+                            {["Admin", "Pegawai"].includes(role) && (
+                              <React.Fragment>
+                                <p className="text-muted">
+                                  Tanggal Buat: {item.createdAt}
+                                </p>
+                                <p className="text-muted">
+                                  Tanggal Update: {item.updatedAt}
+                                </p>
+                              </React.Fragment>
+                            )}
                             <Link
                               className="btn btn-success "
                               to={`jalan/${item.id}`}
                             >
                               Details
                             </Link>
-                            <Link
-                              className="btn btn-warning ml-1"
-                              to={`data-pegawai/update/${item.id}`}
-                            >
-                              Update
-                            </Link>
-                            <CButton
-                              size="md"
-                              color="danger"
-                              className="ml-1"
-                              onClick={() => deleteData(item.id)}
-                            >
-                              Delete
-                            </CButton>
+                            {["Admin", "Pegawai"].includes(role) && (
+                              <React.Fragment>
+                                <Link
+                                  className="btn btn-warning ml-1"
+                                  to={`data-pegawai/update/${item.id}`}
+                                >
+                                  Update
+                                </Link>
+                                <CButton
+                                  size="md"
+                                  color="danger"
+                                  className="ml-1"
+                                  onClick={() => deleteData(item.id)}
+                                >
+                                  Delete
+                                </CButton>
+                              </React.Fragment>
+                            )}
                           </CCardBody>
                         </CCollapse>
                       </>

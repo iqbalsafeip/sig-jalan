@@ -24,20 +24,24 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isloading, setloading] = useState(false);
 
   useEffect(() => {
     document.title = "Login";
   }, []);
 
   const submit = (e) => {
+    setloading(true);
     e.preventDefault();
     dispatch(login({ identifier: username, password: password })).catch(() => {
       alert("Username/ Password yang dimasukan salah");
+      setloading(false);
     });
+    setloading(false);
   };
 
   return (
-    <div className="c-app c-default-layout flex-row align-items-center">
+    <div className="c-app c-default-layout flex-row align-items-center bg-primary">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md="8">
@@ -77,39 +81,25 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs="6">
-                        <button className="btn btn-primary px-4">Login</button>
-                      </CCol>
-                      <CCol xs="6" className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
-                        </CButton>
+                        <button
+                          className="btn btn-primary px-4"
+                          disabled={isloading}
+                        >
+                          Login
+                        </button>
                       </CCol>
                     </CRow>
                   </form>
                 </CCardBody>
               </CCard>
               <CCard
-                className="text-white bg-primary py-5 d-md-down-none"
+                className="text-white bg-secondary text-back py-5 d-md-down-none"
                 style={{ width: "44%" }}
               >
-                <CCardBody className="text-center">
+                <CCardBody className="text-center text-dark">
                   <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton
-                        color="primary"
-                        className="mt-3"
-                        active
-                        tabIndex={-1}
-                      >
-                        Register Now!
-                      </CButton>
-                    </Link>
+                    <h2>Sistem Informasi Pengelolaan Jalan</h2>
+                    <h1>PUPR Garut</h1>
                   </div>
                 </CCardBody>
               </CCard>

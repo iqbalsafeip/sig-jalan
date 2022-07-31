@@ -31,6 +31,7 @@ import { useParams, useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import {
   createKomen,
+  createTitik,
   createUser,
   deleteJalan,
   getJalanById,
@@ -54,9 +55,11 @@ const Details = (props) => {
   const [isLoadingKomen, setLoadKomen] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const [komentar, setKomentar] = useState([]);
-
+  const [modalTitik, setModalTitik] = useState(false);
   const [file, setFile] = useState(null);
-
+  const [isLoadingTitik, setLoadingTitik] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const [titikz, setTitikz] = useState([]);
   const handleUpload = () => {
     console.log(file);
     const fd = new FormData();
@@ -92,6 +95,32 @@ const Details = (props) => {
     console.log(latitude, longitude);
     setLoaded(true);
   }
+
+  const handleTitik = (latitude, longitude, cb) => {
+    setLoadingTitik(true);
+    dispatch(
+      createTitik({
+        data: { jalan: id, titik_awal: latitude, titik_akhir: longitude },
+      })
+    )
+      .then((res) => {
+        console.log(res);
+        setLoadingTitik(false);
+        setModalTitik(false);
+        initData();
+        cb();
+        Swal.fire({
+          title: "Berhasil",
+          text: "berhasil menginput titik",
+          icon: "success",
+          confirmButtonText: "Tutup",
+        });
+      })
+      .catch((err) => {
+        setLoadingTitik(false);
+        console.log(err);
+      });
+  };
 
   const handleComment = (komen, cb) => {
     setLoadKomen(true);
@@ -133,12 +162,19 @@ const Details = (props) => {
   }, []);
 
   const initData = () => {
-    dispatch(getJalanById(id)).then((res) => {
-      setData((state) => ({
-        ...res.data.data.attributes,
-        id: res.data.data.id,
-      }));
-    });
+    setLoading(true);
+    dispatch(getJalanById(id))
+      .then((res) => {
+        setTitikz(res.data.data.attributes?.titiks?.data);
+        setLoading(false);
+        setData((state) => ({
+          ...res.data.data.attributes,
+          id: res.data.data.id,
+        }));
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
   };
 
   const handleDelete = () => {
@@ -167,6 +203,12 @@ const Details = (props) => {
 
   return (
     <CRow>
+      <ModalTitik
+        modalShown={modalTitik}
+        toggle={() => setModalTitik(!modalTitik)}
+        handleSubmit={handleTitik}
+        disabled={isLoadingTitik}
+      />
       <Modal
         modalShown={modal}
         toggle={() => setModal(!modal)}
@@ -276,7 +318,15 @@ const Details = (props) => {
               </CNav>
               <CTabContent>
                 <CTabPane>
-                  {isLoaded && (
+                  {["Admin", "Pegawai"].includes(user.peran) ? (
+                    <button
+                      className="btn btn-success btn-sm m-2"
+                      onClick={() => setModalTitik(!modalTitik)}
+                    >
+                      Tambah Titik
+                    </button>
+                  ) : null}
+                  {!isLoading && (
                     <MapContainer
                       center={[titik.latitude, titik.longitude]}
                       zoom={13}
@@ -288,23 +338,8 @@ const Details = (props) => {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       />
-                      <Marker position={[titik.latitude, titik.longitude]}>
-                        <Popup>
-                          A pretty CSS3 popup. <br /> Easily customizable.
-                        </Popup>
-                      </Marker>
-                      <RoutingMachine
-                        waypoints={[
-                          {
-                            titik_awal: -7.036837079153746,
-                            titik_akhir: 107.92045437612948,
-                          },
-                          {
-                            titik_awal: -7.001790287829221,
-                            titik_akhir: 108.02850145920105,
-                          },
-                        ]}
-                      />
+
+                      <RoutingMachine waypoints={titikz} />
                     </MapContainer>
                   )}
                 </CTabPane>
@@ -342,16 +377,21 @@ const Details = (props) => {
                   </div>
                 </CTabPane>
                 <CTabPane>
-                  <div className="card card-body p-2 mt-2">
-                    <label htmlFor="">Tambah Data Gambar</label>
-                    <input
-                      type="file"
-                      onChange={(e) => setFile(e.target.files)}
-                    />
-                    <button className="btn btn-primary" onClick={handleUpload}>
-                      upload
-                    </button>
-                  </div>
+                  {["Admin", "Pegawai"].includes(user.peran) ? (
+                    <div className="card card-body p-2 mt-2">
+                      <label htmlFor="">Tambah Data Gambar</label>
+                      <input
+                        type="file"
+                        onChange={(e) => setFile(e.target.files)}
+                      />
+                      <button
+                        className="btn btn-primary"
+                        onClick={handleUpload}
+                      >
+                        upload
+                      </button>
+                    </div>
+                  ) : null}
 
                   {data?.gambar_jalan?.data?.map((e, i) => (
                     <img
@@ -399,6 +439,55 @@ const Modal = (props) => {
         >
           {" "}
           {props.disabled ? <CSpinner size="sm" /> : null} Kirim
+        </CButton>{" "}
+        <CButton color="secondary" onClick={props.toggle}>
+          Cancel
+        </CButton>
+      </CModalFooter>
+    </CModal>
+  );
+};
+
+const ModalTitik = (props) => {
+  const [latitude, setLatitude] = React.useState("");
+  const [longitude, setLongitude] = React.useState("");
+
+  const cb = () => {
+    setLongitude("");
+    setLatitude("");
+  };
+
+  return (
+    <CModal show={props.modalShown} onClose={props.toggle}>
+      <CModalHeader closeButton>Tambah Titik</CModalHeader>
+      <CModalBody>
+        <CFormGroup>
+          <CLabel htmlFor="nf-nama">Latitude</CLabel>
+          <CInput
+            rows={5}
+            required
+            onChange={(e) => setLatitude(e.target.value)}
+            value={latitude}
+          ></CInput>
+        </CFormGroup>
+        <CFormGroup>
+          <CLabel htmlFor="nf-nama">Longitude</CLabel>
+          <CInput
+            rows={5}
+            required
+            onChange={(e) => setLongitude(e.target.value)}
+            value={longitude}
+          ></CInput>
+        </CFormGroup>
+      </CModalBody>
+      <CModalFooter>
+        <CButton
+          color="primary"
+          disabled={props.disabled}
+          onClick={() => props.handleSubmit(latitude, longitude, cb)}
+        >
+          {" "}
+          {props.disabled ? <CSpinner size="sm" /> : null} Tambah
         </CButton>{" "}
         <CButton color="secondary" onClick={props.toggle}>
           Cancel

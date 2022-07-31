@@ -138,6 +138,23 @@ export const createKomen = (data) => (dispatch) => {
       });
   });
 };
+export const createTitik = (data) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(BASE_URL + "titiks", data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then(function (response) {
+        resolve(response);
+      })
+      .catch(function (response) {
+        reject(response);
+      });
+  });
+};
 
 export const updateData = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {

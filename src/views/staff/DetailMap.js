@@ -60,8 +60,10 @@ const Details = (props) => {
   const [isLoadingTitik, setLoadingTitik] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [titikz, setTitikz] = useState([]);
+  const [loadingUpload, setLoadingUpload] = useState(false);
   const handleUpload = () => {
     console.log(file);
+    setLoadingUpload(true);
     const fd = new FormData();
     fd.append("files", file[0]);
     fd.append("ref", "api::jalan.jalan");
@@ -71,9 +73,11 @@ const Details = (props) => {
       .then((res) => {
         initData();
         setFile(null);
+        setLoadingUpload(false);
         console.log(res);
       })
       .catch((err) => {
+        setLoadingUpload(false);
         console.log(err);
       });
   };
@@ -387,6 +391,7 @@ const Details = (props) => {
                       <button
                         className="btn btn-primary"
                         onClick={handleUpload}
+                        disabled={loadingUpload}
                       >
                         upload
                       </button>

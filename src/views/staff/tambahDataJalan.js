@@ -206,7 +206,6 @@ const TambahDataJalan = (props) => {
                 <CLabel htmlFor="namalengkap">Panjang</CLabel>
                 <CInput
                   id="namalengkap"
-                  type="password"
                   value={data.panjang}
                   placeholder="Masukan Panjang"
                   required

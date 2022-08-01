@@ -63,7 +63,7 @@ const CustomerData = (props) => {
             icon: "success",
             confirmButtonText: "Tutup",
           });
-          dispatch(getUser("Staff"))
+          dispatch(getUser("Admin"))
             .then((res) => {
               console.log(res);
               setData((data) => res.data);
@@ -95,7 +95,7 @@ const CustomerData = (props) => {
             <CCardHeader>
               Data Admin
               <div className="card-header-actions">
-                <Link className="btn btn-primary" to="staffs/add">
+                <Link className="btn btn-primary" to="admin/add">
                   Tambah Data
                 </Link>
               </div>

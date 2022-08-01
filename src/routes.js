@@ -96,37 +96,37 @@ export const staffRoutes = [
     component: staffDashboard,
   },
   {
-    path: "/customers",
+    path: "/warga",
     exact: true,
     name: "CustomerData",
     component: customerData,
   },
   {
-    path: "/customers/add",
+    path: "/warga/add",
     exact: true,
     name: "CustomerDataAdd",
     component: tambahDataCustomer,
   },
   {
-    path: "/staffs",
+    path: "/admin",
     exact: true,
     name: "staffs",
     component: staffData,
   },
   {
-    path: "/staffs/add",
+    path: "/admin/add",
     exact: true,
     name: "staffsadd",
     component: tambahDataStaff,
   },
   {
-    path: "/technicians",
+    path: "/pegawai",
     exact: true,
     name: "CustomerData",
     component: techniciansData,
   },
   {
-    path: "/technicians/add",
+    path: "/pegawai/add",
     exact: true,
     name: "CustomerDataAdd",
     component: tambahDataTechnicians,
@@ -393,6 +393,13 @@ export const technicianRoutes = [
     exact: true,
     name: "kecamatan",
     component: kecamatan,
+  },
+
+  {
+    path: "/jalan/tambah",
+    exact: true,
+    name: "createjln",
+    component: tambahDataJalan,
   },
 
   {

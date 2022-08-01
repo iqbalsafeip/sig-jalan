@@ -30,9 +30,9 @@ const TambahDataCustomer = (props) => {
   const { id } = useParams();
   const [data, setData] = useState({
     nama: "",
-    jenis_kelamin: "",
     email: "",
     alamat: "",
+    jenis_kelamin: "",
   });
 
   const submit = () => {
@@ -58,7 +58,7 @@ const TambahDataCustomer = (props) => {
             icon: "success",
             confirmButtonText: "Tutup",
           }).then(() => {
-            history.push("/staffs");
+            history.push("/admin");
           });
         })
         .catch((err) => {
@@ -66,8 +66,7 @@ const TambahDataCustomer = (props) => {
           let msg = error.error.name;
           console.log(err.response);
           if (error.error.status === 400) {
-            if (msg === "ApplicationError")
-              msg = "Username dan Password tidak sesuai";
+            if (msg === "ApplicationError") msg = "Terjadi kesalahan";
             return Swal.fire({
               title: msg,
               text: error.error.message,
@@ -101,7 +100,7 @@ const TambahDataCustomer = (props) => {
   return (
     <CCol xs="12" sm="12">
       <CCard>
-        <CCardHeader>{props.isUpdate ? "Update" : "Tambah"} Staff</CCardHeader>
+        <CCardHeader>{props.isUpdate ? "Update" : "Tambah"} Admin</CCardHeader>
         <CCardBody>
           <CRow>
             <CCol xs="4">
@@ -109,7 +108,7 @@ const TambahDataCustomer = (props) => {
                 <CLabel htmlFor="NIP">Username</CLabel>
                 <CInput
                   id="NIP"
-                  placeholder="Masukan NIP"
+                  placeholder="Masukan Username"
                   value={data.username}
                   required
                   onChange={(e) =>
@@ -122,7 +121,7 @@ const TambahDataCustomer = (props) => {
           <CRow>
             <CCol xs="4">
               <CFormGroup>
-                <CLabel htmlFor="namalengkap">password</CLabel>
+                <CLabel htmlFor="namalengkap">Password</CLabel>
                 <CInput
                   id="namalengkap"
                   type="password"
@@ -150,6 +149,22 @@ const TambahDataCustomer = (props) => {
               </CFormGroup>
             </CCol>
           </CRow>
+
+          <CRow>
+            <CCol xs="4">
+              <CFormGroup>
+                <CLabel htmlFor="Email">Email</CLabel>
+                <CInput
+                  id="Email"
+                  type="email"
+                  placeholder="Masukan Email"
+                  value={data.email}
+                  required
+                  onChange={(e) => setData({ ...data, email: e.target.value })}
+                />
+              </CFormGroup>
+            </CCol>
+          </CRow>
           <CRow>
             <CCol xs="4">
               <CFormGroup>
@@ -167,54 +182,6 @@ const TambahDataCustomer = (props) => {
                   <option value="L">Laki-Laki</option>
                   <option value="P">Perempuan</option>
                 </CSelect>
-              </CFormGroup>
-            </CCol>
-          </CRow>
-
-          <CRow>
-            <CCol xs="4">
-              <CFormGroup>
-                <CLabel htmlFor="NoTelp">Longitude</CLabel>
-                <CInput
-                  id="NoTelp"
-                  placeholder="Masukan Longitude"
-                  value={data.longitude}
-                  required
-                  onChange={(e) =>
-                    setData({ ...data, longitude: e.target.value })
-                  }
-                />
-              </CFormGroup>
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol xs="4">
-              <CFormGroup>
-                <CLabel htmlFor="NoTelp">Latitude</CLabel>
-                <CInput
-                  id="NoTelp"
-                  placeholder="Masukan Latitude"
-                  value={data.latitude}
-                  required
-                  onChange={(e) =>
-                    setData({ ...data, latitude: e.target.value })
-                  }
-                />
-              </CFormGroup>
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol xs="4">
-              <CFormGroup>
-                <CLabel htmlFor="Email">Email</CLabel>
-                <CInput
-                  id="Email"
-                  type="email"
-                  placeholder="Masukan Email"
-                  value={data.email}
-                  required
-                  onChange={(e) => setData({ ...data, email: e.target.value })}
-                />
               </CFormGroup>
             </CCol>
           </CRow>

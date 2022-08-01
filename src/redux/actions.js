@@ -71,7 +71,7 @@ export const createUser = (data) => (dispatch) => {
       url: BASE_URL + "auth/local/register",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `bearier ${getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       data: data,
     })

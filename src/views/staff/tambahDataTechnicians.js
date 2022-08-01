@@ -66,8 +66,7 @@ const TambahDataCustomer = (props) => {
           let msg = error.error.name;
           console.log(err.response);
           if (error.error.status === 400) {
-            if (msg === "ApplicationError")
-              msg = "Username dan Password tidak sesuai";
+            if (msg === "ApplicationError") msg = "Terjadi Kesalahan";
             return Swal.fire({
               title: msg,
               text: error.error.message,
@@ -111,7 +110,7 @@ const TambahDataCustomer = (props) => {
                 <CLabel htmlFor="NIP">Username</CLabel>
                 <CInput
                   id="NIP"
-                  placeholder="Masukan NIP"
+                  placeholder="Masukan username"
                   value={data.username}
                   required
                   onChange={(e) =>

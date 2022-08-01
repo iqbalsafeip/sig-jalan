@@ -58,7 +58,7 @@ const TambahDataCustomer = (props) => {
             icon: "success",
             confirmButtonText: "Tutup",
           }).then(() => {
-            history.push("/customers");
+            history.push("/warga");
           });
         })
         .catch((err) => {
@@ -80,7 +80,7 @@ const TambahDataCustomer = (props) => {
       dispatch(updateDataPegawai({ id: id, data: data })).then(() => {
         Swal.fire({
           title: "Berhasil!",
-          text: "berhasil mengupdate data pegawai",
+          text: "berhasil mengupdate data warga",
           icon: "success",
           confirmButtonText: "Tutup",
         }).then(() => {

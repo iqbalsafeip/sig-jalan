@@ -63,7 +63,7 @@ const CustomerData = (props) => {
             icon: "success",
             confirmButtonText: "Tutup",
           });
-          dispatch(getUser("Customer"))
+          dispatch(getUser("Warga"))
             .then((res) => {
               console.log(res);
               setData((data) => res.data);
@@ -95,7 +95,7 @@ const CustomerData = (props) => {
             <CCardHeader>
               Data Warga
               <div className="card-header-actions">
-                <Link className="btn btn-primary" to="customers/add">
+                <Link className="btn btn-primary" to="warga/add">
                   Tambah Data
                 </Link>
               </div>

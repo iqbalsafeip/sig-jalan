@@ -95,7 +95,7 @@ const CustomerData = (props) => {
             <CCardHeader>
               Data Pegawai
               <div className="card-header-actions">
-                <Link className="btn btn-primary" to="technicians/add">
+                <Link className="btn btn-primary" to="pegawai/add">
                   Tambah Data
                 </Link>
               </div>

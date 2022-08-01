@@ -161,17 +161,17 @@ export const staffNav = [
       {
         _tag: "CSidebarNavItem",
         name: "Data Warga",
-        to: "/customers",
+        to: "/warga",
       },
       {
         _tag: "CSidebarNavItem",
         name: "Data Pegawai",
-        to: "/technicians",
+        to: "/pegawai",
       },
       {
         _tag: "CSidebarNavItem",
         name: "Data Admin",
-        to: "/staffs",
+        to: "/admin",
       },
     ],
   },
